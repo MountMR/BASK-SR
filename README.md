@@ -16,5 +16,6 @@ BASK-SR/
 │   ├── config_sgdrp.yaml      Postfilter configuration
 │   └── infer_sgdrp.py         Inference entry point
 ├── requirements.txt           Python dependencies
+├──LICENSE.md
 └── README.md
 ```
