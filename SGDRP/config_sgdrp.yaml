@@ -1,0 +1,160 @@
+seed: 2027
+paths:
+  v17_project: BASKF
+  v17_config: BASKF/config_baskf.yaml
+  v17_checkpoint: BASKF/weights/baskf.pt
+  v17_work_dir: BASKF
+  data_root: ""
+  work_dir: SGDRP
+  warm_start_checkpoint: BASKF/weights/initialization_baskf.pt
+
+postfilter:
+  bands: 24
+  smoothing: 0.82
+  temporal_taps: 4
+  echo_basis_limits: [0.32, 0.16, 0.08, 0.04]
+  reference_basis_limits: [0.12, 0.06, 0.03, 0.015]
+  dt_echo_basis_limits: [0.045, 0.020, 0.010, 0.005]
+  dt_reference_basis_limits: [0.025, 0.012, 0.006, 0.003]
+  nonlinear_order2_limit: 0.08
+  nonlinear_order3_limit: 0.04
+  dt_nonlinear_limit: 0.01
+  gain_residual_limit_db: 4.0
+  fst_min_gain: 0.04
+  dt_min_gain: 0.985
+  epc_transition_min_gain: 0.90
+  dt_common_correction_scale: 1.00
+  attack: 0.18
+  release: 0.96
+  correction_smoothing: 0.72
+  gate_floor: 0.02
+  near_attack: 0.10
+  near_release: 0.88
+  near_gate_power: 1.35
+  near_safe_threshold: 0.28
+  near_safe_temperature: 0.07
+  fst_extra_gain_limit_db: 2.0
+
+train:
+  total_steps: 1100
+  phase_a_steps: 200
+  phase_b_steps: 400
+  phase_c_steps: 800
+  calibration_items: 32
+  calibration_thresholds: [0.22, 0.30, 0.38]
+  calibration_dt_scales: [0.0, 0.5, 1.0]
+  calibration_seed_offset: 31000000
+  batch_size: 16
+  tbptt_frames: 64
+  cache_preroll_frames: 12
+  validation_items: 96
+  validate_every: 100
+  weight_decay: 1.0e-5
+  grad_clip: 0.5
+  bypass_ramp_start: 0
+  bypass_ramp_end: 1
+  max_mix: 1.0
+
+  scene_lr: 2.0e-5
+  near_lr: 2.0e-4
+  band_encoder_lr: 1.0e-5
+  temporal_basis_lr: 6.0e-5
+  nonlinear_basis_lr: 4.0e-5
+  gain_head_lr: 8.0e-5
+  global_state_lr: 1.0e-5
+  joint_band_lr: 3.0e-6
+  joint_basis_lr: 1.8e-5
+  joint_gain_lr: 2.0e-5
+  joint_scene_lr: 2.0e-6
+  joint_near_lr: 3.0e-6
+  fst_strength_lr: 1.2e-4
+  joint_strength_lr: 2.0e-5
+  joint_shared_lr: 1.0e-6
+
+  loss_residual_prediction: 0.30
+  loss_complex: 0.15
+  loss_scenario_margin: 0.20
+  loss_near_preserve: 0.30
+  loss_scene: 0.15
+  loss_near_band: 0.50
+  loss_dt_tail: 0.35
+  dt_tail_tolerance_db: 0.0
+  near_positive_weight: 3.0
+  near_label_relative_floor: 0.001
+  loss_gain_target: 0.05
+  loss_time_smooth: 0.02
+  loss_frequency_smooth: 0.02
+  loss_basis_regularization: 0.03
+  margin_temperature_db: 0.40
+
+  fst_target_gain_db: 4.0
+  dt_target_gain_db: 0.15
+  epc_st_target_gain_db: 3.0
+  epc_dt_target_gain_db: 0.10
+  target_curriculum_start_fraction: 0.50
+  target_curriculum_end_step: 800
+
+  lagrange_initial: 1.0
+  lagrange_min: 0.75
+  lagrange_max: 4.0
+  lagrange_step: 0.20
+  dt_lagrange_floor: 1.25
+  epc_dt_lagrange_floor: 1.10
+  gradnorm_alpha: 0.5
+  gradnorm_min: 0.75
+  gradnorm_max: 4.0
+  gradnorm_every: 100
+  use_pcgrad: true
+  pcgrad_every: 8
+
+  hard_scenario_weight_bonus: 0.20
+  hard_replay_start_step: 500
+  plateau_min_mean_gain_improvement_db: 0.04
+  plateau_patience: 2
+  plateau_momentum_decay: 0.50
+
+  candidate_min_score_improvement: 0.005
+  candidate_guard_fst_db: 0.20
+  candidate_guard_dt_db: 0.40
+  candidate_guard_epc_st_db: 0.20
+  candidate_guard_epc_dt_db: 0.20
+  deploy_guard_fst_db: 0.00
+  deploy_guard_dt_db: 0.00
+  deploy_guard_epc_st_db: 0.00
+  deploy_guard_epc_dt_db: 0.00
+  deploy_dt_p10_min_db: -0.20
+  deploy_dt_regression_fraction_max: 0.35
+  early_stop_min_steps: 1000
+  early_stop_patience: 4
+
+  phase_a_mix: {fst: 0.25, dt: 0.30, epc: 0.45}
+  phase_b_mix: {fst: 0.15, dt: 0.45, epc: 0.40}
+  phase_c_mix: {fst: 0.50, dt: 0.20, epc: 0.30}
+  phase_d_mix: {fst: 0.35, dt: 0.30, epc: 0.35}
+  path_label_radius_frames: 20
+
+oracle:
+  items: 64
+  ridge: 1.0e-4
+  min_linear_dt_gain_db: 0.20
+  min_linear_epc_dt_gain_db: 0.15
+  diagnostic_linear_fst_gain_db: 0.4
+  diagnostic_nonlinear_fst_gain_db: 0.4
+  min_gain_amplitude: 0.50
+  min_full_fst_gain_db: 4.0
+  min_full_epc_st_gain_db: 3.0
+
+cache:
+  enabled: true
+  train_items: 1024
+  validation_items: 96
+  overwrite: false
+  segment_frames: 64
+  segments_per_batch: 1
+  min_free_gb: 3.0
+
+evaluation:
+  batch_size: 8
+  static_items: 200
+  dynamic_items: 200
+  target_erle_gain_db: 4.0

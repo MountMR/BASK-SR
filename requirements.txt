@@ -1,0 +1,6 @@
+torch
+numpy>=1.26,<3
+scipy>=1.11
+soundfile>=0.12
+PyYAML>=6.0
+pandas>=2.1

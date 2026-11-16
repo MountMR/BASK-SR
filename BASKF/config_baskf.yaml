@@ -1,0 +1,144 @@
+seed: 2027
+paths:
+  data_root: ""
+  work_dir: BASKF
+
+audio:
+  sample_rate: 16000
+  win_length: 480
+  hop_length: 160
+  n_fft: 512
+  taps: 16
+  bands: 24
+  chunk_seconds: 5.0
+  dynamic_seconds: 8.0
+data:
+  val_size: 500
+  train_items: 12000
+  static_test_items: 200
+  dynamic_test_items: 200
+  num_workers: 16
+  noise_probability: 0.5
+  nonlinear_probability: 0.5
+  backbone_nonlinear_probability: 0.10
+  scenario_probabilities: {fst: 0.25, dt: 0.35, nst: 0.15, epc: 0.25}
+  ser_db: [-10.0, 10.0]
+  enr_db: [0.0, 35.0]
+  switch_seconds: [2.0, 3.0]
+  fir:
+    length: 2560
+    n_fft: 8192
+    hop: 2048
+    ridge: 0.001
+    min_fit_erle_db: 20.0
+    train_count: 64
+    val_count: 16
+    test_count: 16
+model:
+  short_smoothing: 0.819
+  long_smoothing: 0.980
+  mu_min: 0.002
+  mu_max: 0.70
+  mu_calibration_max: 1.25
+  q_min: 1.0e-5
+  q_max: 2.0e-2
+  q_delta_scale: 0.5
+  observation_floor: 1.0e-8
+  observation_floor_ratio: 1.0e-4
+  covariance_init: 1.0e-2
+  process_init: 1.0e-4
+  covariance_floor: 1.0e-8
+  covariance_cap: 1.0
+  track_mu_cap: 0.85
+  coefficient_norm_cap: 2.0
+baselines:
+  nlms_step: 0.50
+  tfdkf_process_noise: 1.0e-4
+  tfdkf_covariance_init: 1.0e-2
+control:
+  farend_dbfs: -45.0
+  innovation_burst_db: 6.0
+  strong_burst_db: 10.0
+  echo_coherence: 0.55
+  strong_coherence: 0.65
+  doubletalk_enter: 0.55
+  doubletalk_exit: 0.35
+  erle_drop_db: 4.0
+  power_change_db: 6.0
+train:
+  batch_size: 24
+  backbone_steps: 1600
+  adapt_steps: 300
+  balanced_steps: 900
+  warmup_frames: 0
+  tbptt_frames: 160
+  adapt_input_learning_rate: 5.0e-6
+  adapt_head_learning_rate: 0.0
+  balanced_input_learning_rate: 5.0e-6
+  balanced_head_learning_rate: 2.0e-6
+  balanced_base_learning_rate: 2.0e-7
+  continuation_input_learning_rate: 3.0e-6
+  continuation_head_learning_rate: 1.0e-6
+  continuation_base_learning_rate: 1.0e-7
+  min_learning_rate: 1.0e-7
+  weight_decay: 1.0e-6
+  grad_clip: 0.5
+  validate_every: 100
+  validation_items: 200
+  recovery_frames: 250
+  early_frames: 150
+  segment_frames: 150
+  segment_hop_frames: 75
+  loss_global: 0.65
+  loss_early: 0.30
+  loss_segmental: 0.20
+  loss_target: 0.05
+  loss_recovery: 0.25
+  loss_calibration: 0.005
+  loss_mu: 0.03
+  loss_reliability: 0.08
+  loss_drift: 0.10
+  baseline_protect_preserve: 0.75
+  baseline_protect_balanced: 0.40
+  baseline_protect_joint: 0.20
+  preserve_mix: {fst: 0.70, dt: 0.10, epc: 0.20}
+  balanced_mix: {fst: 0.55, dt: 0.25, epc: 0.20}
+  joint_mix: {fst: 0.45, dt: 0.30, epc: 0.25}
+  guard_dt_db: 0.30
+  guard_epc_st_db: 0.35
+  guard_epc_dt_db: 0.30
+  guard_dt_si_sdr_db: 0.10
+  guard_dt_estoi: 0.005
+  min_score_improvement: 0.002
+  early_stop_min_steps: 900
+  early_stop_patience: 6
+  rollback_score_drop_db: 0.30
+  rollback_guard_dt_db: 0.50
+  rollback_guard_epc_st_db: 0.50
+  rollback_guard_epc_dt_db: 0.50
+  rollback_patience: 3
+  max_rollbacks: 3
+  rollback_lr_factor: 0.70
+  fir_preflight_items: 64
+  fir_preflight_late_seconds: 2.0
+  fir_preflight_tolerance_db: 0.10
+targets:
+  known_fir_erle_db: 50.0
+  fst_erle_db: 21.8
+  dt_erle_db: 10.15
+  epc_st_erle_db: 17.2
+  epc_dt_erle_db: 9.1
+evaluation:
+  batch_size: 8
+  nkf_segment_seconds: 1.0
+  nkf_segment_hop_seconds: 0.5
+  nkf_active_db: -40.0
+  nkf_erle_clip_db: [-10.0, 50.0]
+  recovery_horizon_seconds: 4.0
+  recovery_plot_before_seconds: 1.0
+  recovery_plot_after_seconds: 4.0
+  recovery_hold_seconds: 1.0
+  false_reacquire_tolerance_seconds: 0.5
+  modes: [nlms, tfdkf, track]
+
+
